@@ -23,7 +23,7 @@ The quality and usefulness of the result depend on the quality of your literatur
 The result may look similar to this one (in ~org-roam-ui~):
 [[./images/screenshot-2023-12-11.png]]
 
-The colored dots are org-roam nodes, the grey dots are citations. To create an org-roam dedicated to a citation to capture additional information on that citation, the package [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] is what you want.
+The colored dots are org-roam nodes, the grey dots are citations. To create an org-roam node dedicated to a citation to capture additional information on that citation, the package [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] is what you want.
 
 ** Known issues
 - If run interactively, the (only) command ~jf/org-roam-references-sync-keywords-to-roam-db~ should ask the user, if new nodes should be created. This avoids to create nodes for imported citations that have keywords, you didn't review and don't want to have in your database.
