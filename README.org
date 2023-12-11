@@ -1,13 +1,13 @@
 * org-roam-citation-keyword-nodes.el
 
-This package synchronizes keywords found in a bibliography (a bibtex file) with org-roam nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
+This package synchronizes keywords found in a bibliography (a bibtex file) with [[https://www.orgroam.com/][org-roam]] nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
 
 For each keyword in the bibliography, an org-roam node is created if it does not already exist. In this node a heading is created that contains references to the entries in the bibliography that has the corresponding keyword assigned. If the node already contains a reference, the reference will not be added again to the dedicated references heading.
 
 ** Requirements
 
-- Obviously, ~org-roam~ is needed. I tested with ~org-roam~ v2.2.2 and used emacs's built-in sqlite database, which is part of emacs since v29 (I think).
-- To parse the bibliography, the package ~citar~ is used. I tested with v1.4.0.
+- Obviously, [[https://www.orgroam.com/][org-roam]] needed. I tested with ~org-roam~ v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
+- To parse the bibliography, the package [[https://github.com/emacs-citar/citar][citar]] is used. I tested with v1.4.0.
 
 ** Usage
 
@@ -16,9 +16,15 @@ For each keyword in the bibliography, an org-roam node is created if it does not
 3. (make sure, your org-roam-db is in sync with your file system. Run ~M-x org-roam-db-sync~ to be sure.)
 4. Run ~M-x jf/org-roam-references-sync-keywords-to-roam-db~
 5. Cross your fingers and wait (took 4 minutes with about 500 citations and 150 distinct keywords).
-6. Inspect the results and discover relationships in your literature database that you weren't aware of.
+6. Inspect the results (preferably with [[https://github.com/org-roam/org-roam-ui][org-roam-ui]]) and discover relationships in your literature database that you weren't aware of.
 
-The quality and usefulness of the result depend on the quality of your literature database, of course. It is a good idea to review the keywords (or groups, if you used groups in JabRef or similar), replay the  backup
+The quality and usefulness of the result depend on the quality of your literature database, of course. It is a good idea to review the keywords (or groups, if you used groups in JabRef or similar) before migrating the nodes and references to your existing org-roam database.
+
+The result may look similar to this one (in ~org-roam-ui~):
+[[./images/screenshot-2023-12-11.png]]
+
+The colored dots are org-roam nodes, the grey dots are citations. To create an org-roam dedicated to a citation to capture additional information on that citation, the package [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] is what you want.
 
 ** Known issues
 - If run interactively, the (only) command ~jf/org-roam-references-sync-keywords-to-roam-db~ should ask the user, if new nodes should be created. This avoids to create nodes for imported citations that have keywords, you didn't review and don't want to have in your database.
+- ROAM_REFS property is not added to the nodes. This is used by [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] to quickly find all nodes that relate to a citation. To add this functionality, is a one-liner, but I am not sure, if this is what I really want. This could of course be configurable.
