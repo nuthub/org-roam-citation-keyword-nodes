@@ -1,4 +1,4 @@
-# org-roam-citation-keyword-nodes
+* org-roam-citation-keyword-nodes.el
 
 This package synchronizes keywords found in a bibliography (a bibtex file) with org-roam nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
 
