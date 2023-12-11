@@ -1,0 +1,7 @@
+# org-roam-citation-keyword-nodes
+
+This package synchronizes keywords found in a bibliography (a bibtex file) with org-roam nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
+
+For each keyword in the bibliography, an org-roam node is created if it does not already exist. In this node a heading is created that contains references to the entries in the bibliography that has the corresponding keyword assigned. If the node already contains a reference, the reference will not be added again to the dedicated references heading.
+
+To parse the bibliography, the package citar is used.
