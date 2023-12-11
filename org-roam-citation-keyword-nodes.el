@@ -3,9 +3,9 @@
 ;; Copyright (C) 2023  Julian Flake
 
 ;; Author: Julian Flake <julian@flake.de>
-;; https://github.com/nuthub/org-roam-citation-keyword-nodes
+;; URL: https://github.com/nuthub/org-roam-citation-keyword-nodes
 ;; Version: 0.1
-;; Keywords: citar, org-roam
+;; Keywords: bib, convenience, files, hypermedia
 ;; Package-Requires: ((citar "1.4") (org-roam "2.2"))
 
 ;; This file is not part of GNU Emacs.
@@ -18,7 +18,7 @@
 
 (defvar jf/org-roam-references-keyword-field
   "keywords"
-  "A string. The name of the bibtex field that contains keywords. Is \"keywords\" in the typical use case, but may also be e.g. \"groups\", if you want to create roam nodes for JabRef groups.
+  "A string. The name of the bibtex field that contains keywords. Is 'keywords' in the typical use case, but may also be e.g. 'groups' if you want to create roam nodes for JabRef groups.
 Set jf/org-roam-references-keyword-field to the delimiter, the different keywords are separated by. The keywords are trimmed after separation.")
 
 (defvar jf/org-roam-references-keyword-separator
