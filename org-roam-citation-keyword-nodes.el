@@ -71,12 +71,11 @@ If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
      (t
       (user-error "Multiple nodes exist with title or alias \"%s\"" s)))))
 
-(defun jf/org-roam-references--add-reference-to-roam-node-if-not-exists (nodetitle citekey)
-  "Add to the org-roam node NODETITLE a reference to CITEKEY."
-  (let ((citation (citar-get-entry citekey))
-	(roam-node (jf/org-roam-references--get-node-from-title-or-alias nodetitle t)))
+(defun jf/org-roam-references--add-reference-to-roam-node-if-not-exists (node citekey)
+  "Add to the org-roam node NODE a reference to CITEKEY."
+  (let ((citation (citar-get-entry citekey)))
     ;; open roam node file
-    (org-roam-node-open roam-node)
+    (org-roam-node-open node)
     (save-excursion
       ;; Go to the beginning of the buffer.
       (beginning-of-buffer)
@@ -124,35 +123,38 @@ If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
   (or
    (jf/org-roam-references--get-node-from-title-or-alias title t)
    (progn (let* ((templatekey jf/org-roam-references-capture-template-key))
-	    (apply 'org-roam-capture-
-		   :info (list :title title)
-		   :node (org-roam-node-create :title title)
-		   :props '(:finalize find-file)
-		   (if templatekey
-		       (list :keys templatekey)
-		     (list
-		      :templates
-		      (list jf/org-roam-references-capture-fallback-template)))))
+	    (save-excursion
+	      (apply 'org-roam-capture-
+		     :info (list :title title)
+		     :node (org-roam-node-create :title title)
+		     :props '(:immediate-finish t :kill-buffer t)
+		     (if templatekey
+			 (list :keys templatekey)
+		       (list
+			:templates
+			(list jf/org-roam-references-capture-fallback-template))))))
 	  (jf/org-roam-references--get-node-from-title-or-alias title t))))
 
 
 
+;;
 ;; The command to start the synchronization.
 ;;
-;;
 (defun jf/org-roam-references-sync-keywords-to-roam-db ()
-  "Synchronize the citations's keywords with org-roam nodes."
+  "Synchronize the citations' keywords with org-roam nodes. Only the direction bibliography -> org-roam is supported."
   (interactive)
   
   (maphash (lambda (citekey citation)
+	     (message (concat "Now processing " citekey))
 	     ;; get all keywords of citation
 	     (let ((keywords (jf/org-roam-references--get-all-keywords-of-citation citation)))
 	       ;; 0. with every keyword
 	       (mapc (lambda (keyword)
 		       ;; 1. create roam node for the keyword
-		       (jf/org-roam-references--create-get-roam-node keyword)
-		       ;; 2. add all reference to the keyword's node
-		       (jf/org-roam-references--add-reference-to-roam-node-if-not-exists keyword citekey))
+		       (let ((node
+			      (jf/org-roam-references--create-get-roam-node keyword)))
+			 ;; 2. add all reference to the keyword's node
+			 (jf/org-roam-references--add-reference-to-roam-node-if-not-exists node citekey)))
 		     keywords)))
 	   (citar-get-entries))
   )
