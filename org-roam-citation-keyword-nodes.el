@@ -3,22 +3,25 @@
 ;; Copyright (C) 2023  Julian Flake
 
 ;; Author: Julian Flake <julian@flake.de>
-;; https://github.com/nuthub/org-roam-citation-keyword-nodes
+;; Created: 10 Dec 2023
+;; URL: https://github.com/nuthub/org-roam-citation-keyword-nodes
 ;; Version: 0.1
-;; Keywords: citar, org-roam
+;; Keywords: bib, convenience, files, hypermedia
 ;; Package-Requires: ((citar "1.4") (org-roam "2.2"))
 
 ;; This file is not part of GNU Emacs.
-;;
+
 ;;; Commentary:
+
+;; TODO: make it interactive (let user decide, whether a new node should be created)
+;; TODO: make pull request to org-roam for including the nocase &optional
 
 ;;; Code:
 
-;;; Variables
-
+;; Variables
 (defvar jf/org-roam-references-keyword-field
   "keywords"
-  "A string. The name of the bibtex field that contains keywords. Is \"keywords\" in the typical use case, but may also be e.g. \"groups\", if you want to create roam nodes for JabRef groups.
+  "A string. The name of the bibtex field that contains keywords. Is 'keywords' in the typical use case, but may also be e.g. 'groups' if you want to create roam nodes for JabRef groups.
 Set jf/org-roam-references-keyword-field to the delimiter, the different keywords are separated by. The keywords are trimmed after separation.")
 
 (defvar jf/org-roam-references-keyword-separator
@@ -43,12 +46,11 @@ Set jf/org-roam-references-keyword-field to the delimiter, the different keyword
   "The MATCH string applied to org-map-entries, while scanning for exitence of the heading, the references should be added to.")
 
 
-;;; Functions
+;; Functions
 
 (defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
   "Retrieves the node that has S as title or alias.
-If NOCASE is t, the query is case insensitive. It is case sensitive otherwise.
-TODO: make pull request to org-roam"
+If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
   ;; Search for nodes in the roam db that have the provided S as title or alias. There should be only one such node.
   (let ((matches 
 	 (seq-uniq
@@ -135,11 +137,8 @@ TODO: make pull request to org-roam"
 
 
 
-;;; Commands
-;;
 ;; The command to start the synchronization.
 ;;
-;; TODO: make it interactive (let user decide, whether a new node should be created)
 ;;
 (defun jf/org-roam-references-sync-keywords-to-roam-db ()
   "Synchronize the citations's keywords with org-roam nodes."
@@ -157,3 +156,5 @@ TODO: make pull request to org-roam"
 		     keywords)))
 	   (citar-get-entries))
   )
+
+;;; org-roam-citation-keyword-nodes.el ends here
