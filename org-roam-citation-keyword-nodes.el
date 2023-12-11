@@ -1,10 +1,20 @@
-;;; org-roam-citation-keyword-nodes.el --- This package synchronizes keywords found in a bibliography (a bibtex file) with org-roam nodes.  -*- lexical-binding: t; -*-
+;;; org-roam-citation-keyword-nodes.el --- Synchronizing keywords in a citar bibliography with org-roam  -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; Copyright (C) 2023  Julian Flake
 
 ;; Author: Julian Flake <julian@flake.de>
+;; https://github.com/nuthub/org-roam-citation-keyword-nodes
+;; Version: 0.1
 ;; Keywords: citar, org-roam
+;; Package-Requires: ((citar "1.4") (org-roam "2.2"))
 
+;; This file is not part of GNU Emacs.
+;;
+;;; Commentary:
+
+;;; Code:
+
+;;; Variables
 
 (defvar jf/org-roam-references-keyword-field
   "keywords"
@@ -32,6 +42,8 @@ Set jf/org-roam-references-keyword-field to the delimiter, the different keyword
 (defvar jf/org-roam-references-heading-filter "LEVEL=1"
   "The MATCH string applied to org-map-entries, while scanning for exitence of the heading, the references should be added to.")
 
+
+;;; Functions
 
 (defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
   "Retrieves the node that has S as title or alias.
@@ -123,28 +135,25 @@ TODO: make pull request to org-roam"
 
 
 
-
+;;; Commands
+;;
 ;; The command to start the synchronization.
+;;
+;; TODO: make it interactive (let user decide, whether a new node should be created)
 ;;
 (defun jf/org-roam-references-sync-keywords-to-roam-db ()
   "Synchronize the citations's keywords with org-roam nodes."
   (interactive)
   
-  (org-roam-db-sync)
-
-  (maphash (lambda (CITEKEY CITATION)
-	     "Process on citation"
-	     ;; get all keywords
-	     (let ((keywords (jf/org-roam-references--get-all-keywords-of-citation CITATION)))
-	       ;; 0. do something with all keywords
-	       (mapc (lambda (KEYWORD)
-		       "Process a keyword for a citation."
-		       ;; 1. create roam nodes for the keyword
-		       (jf/org-roam-references--create-get-roam-node KEYWORD)
-		       ;; 2. add all references to the keyword's nodes
-		       (jf/org-roam-references--add-reference-to-roam-node-if-not-exists KEYWORD CITEKEY))
-		     keywords)
-	       ;; (jf/add-reference-to-roam-node-if-not-exists)
-	       ))
+  (maphash (lambda (citekey citation)
+	     ;; get all keywords of citation
+	     (let ((keywords (jf/org-roam-references--get-all-keywords-of-citation citation)))
+	       ;; 0. with every keyword
+	       (mapc (lambda (keyword)
+		       ;; 1. create roam node for the keyword
+		       (jf/org-roam-references--create-get-roam-node keyword)
+		       ;; 2. add all reference to the keyword's node
+		       (jf/org-roam-references--add-reference-to-roam-node-if-not-exists keyword citekey))
+		     keywords)))
 	   (citar-get-entries))
   )
