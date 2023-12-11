@@ -1,3 +1,37 @@
+;;; org-roam-citation-keyword-nodes.el --- This package synchronizes keywords found in a bibliography (a bibtex file) with org-roam nodes.  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2023  Julian Flake
+
+;; Author: Julian Flake <julian@flake.de>
+;; Keywords: citar, org-roam
+
+
+(defvar jf/org-roam-references-keyword-field
+  "keywords"
+  "A string. The name of the bibtex field that contains keywords. Is \"keywords\" in the typical use case, but may also be e.g. \"groups\", if you want to create roam nodes for JabRef groups.
+Set jf/org-roam-references-keyword-field to the delimiter, the different keywords are separated by. The keywords are trimmed after separation.")
+
+(defvar jf/org-roam-references-keyword-separator
+  ","
+  "A string. The delimiter of the entries in the jf/org-roam-references-keyword-field.")
+
+(defvar jf/org-roam-references-capture-template-key
+  "d"
+  "The key of the template in org-roam-capture-templates to use for creating new nodes. If the value is nil, the template in jf/org-roam-references-capture-fallback-template is used.")
+
+(defvar jf/org-roam-references-capture-fallback-template
+  '("d" "default" plain "%?"
+    :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+    :unnarrowed t)
+  "A fallback template, if jf/org-roam-references-capture-template-key is nil.")
+
+(defvar jf/org-roam-references-heading
+  "References"
+  "The heading that should contain the references added to a keyword node.")
+
+(defvar jf/org-roam-references-heading-filter "LEVEL=1"
+  "The MATCH string applied to org-map-entries, while scanning for exitence of the heading, the references should be added to.")
+
 
 (defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
   "Retrieves the node that has S as title or alias.
@@ -63,8 +97,7 @@ TODO: make pull request to org-roam"
     ))
 
 (defun jf/org-roam-references--get-all-keywords-of-citation (citation)
-  "Return a list of strings with all keywords of the CITATION.
-If no keywords were found, return the empty string"
+  "Return a list of strings with all keywords of the CITATION. If no keywords were found, return the empty string"
   (let ((keywords-string (cdr (assoc jf/org-roam-references-keyword-field citation))))
     (split-string
      (or keywords-string "")
@@ -91,37 +124,10 @@ If no keywords were found, return the empty string"
 
 
 
-(defvar jf/org-roam-references-keyword-field
-  "keywords"
-  "A string. The name of the bibtex field that contains keywords. Is \"keywords\" in the typical use case, but may also be e.g. \"groups\", if you want to create roam nodes for JabRef groups.
-Set jf/org-roam-references-keyword-field to the delimiter, the different keywords are separated by. The keywords are trimmed after separation.")
-
-(defvar jf/org-roam-references-keyword-separator
-  ","
-  "A string. The delimiter of the entries in the jf/org-roam-references-keyword-field.")
-
-(defvar jf/org-roam-references-capture-template-key
-  "d"
-  "The key of the template in org-roam-capture-templates to use for creating new nodes. If the value is nil, the template in jf/org-roam-references-capture-fallback-template is used.")
-
-(defvar jf/org-roam-references-capture-fallback-template
-  '("d" "default" plain "%?"
-    :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-    :unnarrowed t)
-  "A fallback template, if jf/org-roam-references-capture-template-key is nil.")
-
-(defvar jf/org-roam-references-heading
-  "References"
-  "The heading that should contain the references added to a keyword node.")
-
-(defvar jf/org-roam-references-heading-filter "LEVEL=1"
-  "The MATCH string applied to org-map-entries, while scanning for exitence of the heading, the references should be added to.")
-
-
 ;; The command to start the synchronization.
 ;;
 (defun jf/org-roam-references-sync-keywords-to-roam-db ()
-  ""
+  "Synchronize the citations's keywords with org-roam nodes."
   (interactive)
   
   (org-roam-db-sync)
