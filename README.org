@@ -6,12 +6,12 @@ For each keyword in the bibliography, an org-roam node is created if it does not
 
 ** Requirements
 
-- Obviously, [[https://www.orgroam.com/][org-roam]] needed. I tested with ~org-roam~ v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
+- Obviously, [[https://www.orgroam.com/][org-roam]] is needed. I tested with org-roam v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
 - To parse the bibliography, the package [[https://github.com/emacs-citar/citar][citar]] is used. I tested with v1.4.0.
 
 ** Installation
 
-The package is not available via ELPA / MELPA. To install the package, you need to use [[https://github.com/radian-software/straight.el][straight.el]]. The you just need to put this into your config:
+The package is not available via ELPA / MELPA. To install the package, you may use [[https://github.com/radian-software/straight.el][straight.el]]. With straight.el, you need to put the following into your config:
 
 #+begin_src emacs-lisp
   (straight-use-package
@@ -45,6 +45,6 @@ The colored dots are org-roam nodes, the grey dots are citations. To create an o
 
 ** Known issues
 - ROAM_REFS property is not added to the nodes. This is used by [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] to quickly find all nodes that relate to a citation. To add this functionality, is a one-liner, but I am not sure, if this is what I really want. This could of course be configurable.
-- These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable.
+- These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable (suggestions welcome).
 - ERT test cases are missing.
 - Incompatibility with frames-only-mode.
