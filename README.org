@@ -29,10 +29,10 @@ The package is not available via ELPA / MELPA. To install the package, you need 
 
 ** Usage
 
-1. Make a backup of your org-roam database
-2. Optional: Change your ~org-roam-directory~ for an initial synchronization to an empty directory to preview your results.)
+1. Make a backup of your org-roam database.
+2. Optional: Change your ~org-roam-directory~ for an initial synchronization to an empty directory to preview your results.
 3. Optional: Make sure, your org-roam-db is in sync with your file system. Run ~M-x org-roam-db-sync~ to be sure.
-4. Run ~M-x jf/org-roam-references-sync-keywords-to-roam-db~
+4. Run ~M-x jf/org-roam-references-sync-keywords-to-roam-db~.
 5. Cross your fingers and wait (took 4 minutes with about 500 citations and 150 distinct keywords).
 6. Inspect the results (preferably with [[https://github.com/org-roam/org-roam-ui][org-roam-ui]]) and discover relationships in your literature database that you weren't aware of.
 
@@ -44,7 +44,7 @@ The result may look similar to this one (in ~org-roam-ui~):
 The colored dots are org-roam nodes, the grey dots are citations. To create an org-roam node dedicated to a citation to capture additional information on that citation, the package [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] is what you want.
 
 ** Known issues
-- If run interactively, the (only) command ~jf/org-roam-references-sync-keywords-to-roam-db~ should ask the user, if new nodes should be created. This avoids to create nodes for imported citations that have keywords, you didn't review and don't want to have in your database.
 - ROAM_REFS property is not added to the nodes. This is used by [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] to quickly find all nodes that relate to a citation. To add this functionality, is a one-liner, but I am not sure, if this is what I really want. This could of course be configurable.
-- This are my first Emacs Lisp steps (except for configuration things). So code quality may be improvable.
+- These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable.
 - ERT test cases are missing.
+- Incompatibility with frames-only-mode.

@@ -85,9 +85,9 @@ If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise."
 (defun jf/org-roam-references--add-reference-to-roam-node-if-not-exists (node citekey)
   "Add to the org-roam node NODE a reference to CITEKEY."
   (let ((citation (citar-get-entry citekey)))
-    ;; open roam node file
-    (org-roam-node-open node)
     (save-excursion
+      ;; open roam node file
+      (org-roam-node-open node)
       ;; Go to the beginning of the buffer.
       (goto-char (point-min))
       ;; check, if reference is already contained
@@ -112,12 +112,12 @@ If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise."
 			(cdr (assoc "author" citation))
 			" :: "
 			(cdr (assoc "title" citation))
-			", " (cdr (assoc "year" citation))))))
+			", " (cdr (assoc "year" citation)))))
 
-    ;; save & close
-    (save-buffer)
-    ;; TODO kill buffer only, if not visited
-    (kill-buffer)
+      ;; save & close
+      (save-buffer)
+      ;; TODO kill buffer only, if not visited
+      (kill-buffer))
     ))
 
 (defun jf/org-roam-references--get-all-keywords-of-citation (citation)
@@ -130,31 +130,33 @@ If no keywords were found, return the empty string."
      t " ")))
 
 
-(defun jf/org-roam-references--create-get-roam-node (title)
-  "Create or get existing roam node with title TITLE."
-  (or
-   (jf/org-roam-references--get-node-from-title-or-alias title t)
-   (progn (let* ((templatekey jf/org-roam-references-capture-template-key))
-	    (save-excursion
-	      (apply 'org-roam-capture-
-		     :info (list :title title)
-		     :node (org-roam-node-create :title title)
-		     :props '(:immediate-finish t :kill-buffer t)
-		     (if templatekey
-			 (list :keys templatekey)
-		       (list
-			:templates
-			(list jf/org-roam-references-capture-fallback-template))))))
-	  (jf/org-roam-references--get-node-from-title-or-alias title t))))
-
-
+(defun jf/org-roam-references--create-get-roam-node (title &optional force)
+  "Create or get existing roam node with title TITLE.
+The user is asked for each new node, unless FORCE is t."
+  (save-excursion
+    (or
+     (jf/org-roam-references--get-node-from-title-or-alias title t)
+     (progn (let* ((templatekey jf/org-roam-references-capture-template-key))
+	      (when (or force
+			(y-or-n-p (concat "Create a org-roam node \"" title "\"?")))
+		(apply 'org-roam-capture-
+		       :info (list :title title)
+		       :node (org-roam-node-create :title title)
+		       :props '(:immediate-finish t :kill-buffer t)
+		       (if templatekey
+			   (list :keys templatekey)
+			 (list
+			  :templates
+			  (list jf/org-roam-references-capture-fallback-template))))))
+	    (jf/org-roam-references--get-node-from-title-or-alias title t)))))
 
 ;;
 ;; The command to start the synchronization.
 ;;
-(defun jf/org-roam-references-sync-keywords-to-roam-db ()
+(defun jf/org-roam-references-sync-keywords-to-roam-db (&optional force)
   "Synchronize the citations' keywords with org-roam nodes.
-Only the direction bibliography -> org-roam is supported."
+Only the direction bibliography -> org-roam is supported.
+If the optional FORCE is t, nodes are created without asking the user."
   (interactive)
   
   (maphash (lambda (citekey citation)
@@ -163,9 +165,9 @@ Only the direction bibliography -> org-roam is supported."
 	     (let ((keywords (jf/org-roam-references--get-all-keywords-of-citation citation)))
 	       ;; 0. with every keyword
 	       (mapc (lambda (keyword)
-		       ;; 1. create roam node for the keyword
+		       ;; 1. create (or get) roam node for the keyword
 		       (let ((node
-			      (jf/org-roam-references--create-get-roam-node keyword)))
+			      (jf/org-roam-references--create-get-roam-node keyword force)))
 			 ;; 2. add all reference to the keyword's node
 			 (jf/org-roam-references--add-reference-to-roam-node-if-not-exists node citekey)))
 		     keywords)))
