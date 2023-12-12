@@ -18,19 +18,28 @@
 
 ;;; Code:
 
+(require 'org-roam)
+(require 'citar)
+
 ;; Variables
 (defvar jf/org-roam-references-keyword-field
   "keywords"
-  "A string. The name of the bibtex field that contains keywords. Is 'keywords' in the typical use case, but may also be e.g. 'groups' if you want to create roam nodes for JabRef groups.
-Set jf/org-roam-references-keyword-field to the delimiter, the different keywords are separated by. The keywords are trimmed after separation.")
+  "A string.  The name of the bibtex field that contains keywords.
+Is \"keywords\" in the typical use case, but may also be e.g. \"groups\"
+if you want to create roam nodes for JabRef groups.
+Set jf/org-roam-references-keyword-field to the delimiter, the different
+keywords are separated by.  The keywords are trimmed after separation.")
 
 (defvar jf/org-roam-references-keyword-separator
   ","
-  "A string. The delimiter of the entries in the jf/org-roam-references-keyword-field.")
+  "The delimiter of the entries in the keyword field.
+This is a string separating the values in jf/org-roam-references-keyword-field.")
 
 (defvar jf/org-roam-references-capture-template-key
   "d"
-  "The key of the template in org-roam-capture-templates to use for creating new nodes. If the value is nil, the template in jf/org-roam-references-capture-fallback-template is used.")
+  "The template key in org-roam-capture-templates to use for creating new nodes.
+If the value is nil, the template in
+jf/org-roam-references-capture-fallback-template is used.")
 
 (defvar jf/org-roam-references-capture-fallback-template
   '("d" "default" plain "%?"
@@ -43,16 +52,18 @@ Set jf/org-roam-references-keyword-field to the delimiter, the different keyword
   "The heading that should contain the references added to a keyword node.")
 
 (defvar jf/org-roam-references-heading-filter "LEVEL=1"
-  "The MATCH string applied to org-map-entries, while scanning for exitence of the heading, the references should be added to.")
+  "Filter string for searching reference heading.
+This is MATCH string applied to org-map-entries, while scanning for existence of
+the heading, the references should be added to.")
 
 
 ;; Functions
 
 (defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
   "Retrieves the node that has S as title or alias.
-If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
+If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise."
   ;; Search for nodes in the roam db that have the provided S as title or alias. There should be only one such node.
-  (let ((matches 
+  (let ((matches
 	 (seq-uniq
 	  (append
 	   (org-roam-db-query (vconcat [:select [id] :from nodes
@@ -78,14 +89,14 @@ If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
     (org-roam-node-open node)
     (save-excursion
       ;; Go to the beginning of the buffer.
-      (beginning-of-buffer)
+      (goto-char (point-min))
       ;; check, if reference is already contained
       (when (eq nil (search-forward (concat "@" citekey) nil t))
 	;; make sure that the References heading exists
 	(when (not (member jf/org-roam-references-heading
 			   (org-map-entries (lambda () (nth 4 (org-heading-components)))
 					    jf/org-roam-references-heading-filter)))
-	  (end-of-buffer)
+	  (goto-char (point-max))
 	  (insert (concat "\n* " jf/org-roam-references-heading "\n")))
 	;; search for and go to the references heading
 	(search-forward (concat "\n* " jf/org-roam-references-heading "\n") nil t)
@@ -110,7 +121,8 @@ If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
     ))
 
 (defun jf/org-roam-references--get-all-keywords-of-citation (citation)
-  "Return a list of strings with all keywords of the CITATION. If no keywords were found, return the empty string"
+  "Return a list of strings with all keywords of the CITATION.
+If no keywords were found, return the empty string."
   (let ((keywords-string (cdr (assoc jf/org-roam-references-keyword-field citation))))
     (split-string
      (or keywords-string "")
@@ -141,7 +153,8 @@ If NOCASE is t, the query is case insensitive. It is case sensitive otherwise."
 ;; The command to start the synchronization.
 ;;
 (defun jf/org-roam-references-sync-keywords-to-roam-db ()
-  "Synchronize the citations' keywords with org-roam nodes. Only the direction bibliography -> org-roam is supported."
+  "Synchronize the citations' keywords with org-roam nodes.
+Only the direction bibliography -> org-roam is supported."
   (interactive)
   
   (maphash (lambda (citekey citation)

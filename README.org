@@ -9,6 +9,24 @@ For each keyword in the bibliography, an org-roam node is created if it does not
 - Obviously, [[https://www.orgroam.com/][org-roam]] needed. I tested with ~org-roam~ v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
 - To parse the bibliography, the package [[https://github.com/emacs-citar/citar][citar]] is used. I tested with v1.4.0.
 
+** Installation
+
+The package is not available via ELPA / MELPA. To install the package, you need to use [[https://github.com/radian-software/straight.el][straight.el]]. The you just need to put this into your config:
+
+#+begin_src emacs-lisp
+  (straight-use-package
+   '(org-roam-citation-keyword-nodes
+     :type git :host github
+     :repo "nuthub/org-roam-citation-keyword-nodes"))
+#+end_src
+
+# #+begin_src emacs-lisp :tangle yes
+#   (use-package org-roam-citation-keyword-nodes
+#     :straight (org-roam-citation-keyword-nodes
+#   	     :type git :host github
+#   	     :repo "nuthub/org-roam-citation-keyword-nodes"))
+# #+end_src
+
 ** Usage
 
 1. Make a backup of your org-roam database
