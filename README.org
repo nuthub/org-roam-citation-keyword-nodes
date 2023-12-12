@@ -22,13 +22,43 @@ To install the package, you may use [[https://github.com/radian-software/straigh
      :repo "nuthub/org-roam-citation-keyword-nodes"))
 #+end_src
 
-If you use straight.el's version of use-package, you can use:
+Or, if you use straight.el's version of use-package, you can use something like the following to install this package.
 
 #+begin_src emacs-lisp
   (use-package org-roam-citation-keyword-nodes
+    :after roam citar
     :straight (org-roam-citation-keyword-nodes
   	     :type git :host github
   	     :repo "nuthub/org-roam-citation-keyword-nodes"))
+#+end_src
+
+** Configuration
+
+This is an example, of how you can configure this package. The examples set the default values, which is not necessary, since the values are already set by default.
+
+#+begin_src emacs-lisp
+  (use-package org-roam-citation-keyword-nodes
+    :after roam citar
+    :straight (org-roam-citation-keyword-nodes
+  	     :type git :host github
+  	     :repo "nuthub/org-roam-citation-keyword-nodes")
+    :config
+    ;; The key (as in key/value) of the bibtex field that contains keywords.
+    (setq jf/org-roam-references-keyword-field "keywords")
+    ;; The character, the bibtex keyword entries are separated by.
+    (setq jf/org-roam-references-keyword-separator ",")
+    ;; The key (as in keyboard) of the template to use for new org-roam nodes.
+    (setq jf/org-roam-references-capture-template-key "d")
+    ;; A fallback template that is used, if the capture template key is nil.
+    (setq jf/org-roam-references-capture-fallback-template
+     	("d" "default" plain "%?"
+  	 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+  			    "#+title: ${title}\n")
+  	 :unnarrowed t))
+    ;; The org heading that should contain the references added to a keyword node.
+    (setq jf/org-roam-references-heading "References")
+    ;; The tags/property/todo match expression for searching the reference heading.
+    (setq jf/org-roam-references-heading-filter "LEVEL=1"))    
 #+end_src
 
 ** Usage

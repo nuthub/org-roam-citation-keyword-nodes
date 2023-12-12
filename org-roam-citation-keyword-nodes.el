@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2023  Julian Flake
 
-;; Author: Julian Flake <julian@flake.de>
+;; Author: Julian Flake <flake@uni-koblenz.de>
 ;; Created: 10 Dec 2023
 ;; URL: https://github.com/nuthub/org-roam-citation-keyword-nodes
 ;; Version: 0.1
@@ -38,7 +38,7 @@
 ;; Variables
 (defvar jf/org-roam-references-keyword-field
   "keywords"
-  "A string.  The name of the bibtex field that contains keywords.
+  "The key (as in key/value) of the bibtex field that contains keywords.
 Is \"keywords\" in the typical use case, but may also be e.g. \"groups\"
 if you want to create roam nodes for JabRef groups.
 Set jf/org-roam-references-keyword-field to the delimiter, the different
@@ -46,29 +46,34 @@ keywords are separated by.  The keywords are trimmed after separation.")
 
 (defvar jf/org-roam-references-keyword-separator
   ","
-  "The delimiter of the entries in the keyword field.
-This is a string separating the values in jf/org-roam-references-keyword-field.")
+  "The character, the bibtex keyword entries are separated by.
+The delimiter of the entries in the keyword field.  This is the string
+separating the values in the jf/org-roam-references-keyword-field of bibtex
+entries.  An alternative could be \";\".")
 
 (defvar jf/org-roam-references-capture-template-key
   "d"
-  "The template key in org-roam-capture-templates to use for creating new nodes.
-If the value is nil, the template in
+  "The key (as in keyboard) of the template to use for new org-roam nodes.
+The template key of the templates in in org-roam-capture-templates to use for
+creating new nodes.  If the value is nil, the (first) template in
 jf/org-roam-references-capture-fallback-template is used.")
 
 (defvar jf/org-roam-references-capture-fallback-template
   '("d" "default" plain "%?"
     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
     :unnarrowed t)
-  "A fallback template, if jf/org-roam-references-capture-template-key is nil.")
+  "A fallback template that is used, if the capture template key is nil.
+The capture template key is set in jf/org-roam-references-capture-template-key.")
 
 (defvar jf/org-roam-references-heading
   "References"
-  "The heading that should contain the references added to a keyword node.")
+  "The org heading that should contain the references added to a keyword node.")
 
 (defvar jf/org-roam-references-heading-filter "LEVEL=1"
-  "Filter string for searching reference heading.
-This is MATCH string applied to org-map-entries, while scanning for existence of
-the heading, the references should be added to.")
+  "The tags/property/todo match expression for searching the reference heading.
+This is the MATCH string applied to org-map-entries, while scanning for
+existence of the heading, the references should be added to.  Any kind of
+tags/property/todo match expression is allowed here.")
 
 
 ;; Functions
