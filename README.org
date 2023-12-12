@@ -6,12 +6,14 @@ For each keyword in the bibliography, an org-roam node is created if it does not
 
 ** Requirements
 
-- Obviously, [[https://www.orgroam.com/][org-roam]] needed. I tested with ~org-roam~ v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
+- Obviously, [[https://www.orgroam.com/][org-roam]] is needed. I tested with org-roam v2.2.2 and used emacs's built-in sqlite database, which is part of GNU Emacs since v29 (I think).
 - To parse the bibliography, the package [[https://github.com/emacs-citar/citar][citar]] is used. I tested with v1.4.0.
 
 ** Installation
 
-The package is not available via ELPA / MELPA. To install the package, you need to use [[https://github.com/radian-software/straight.el][straight.el]]. The you just need to put this into your config:
+The package is not available via ELPA / MELPA.
+
+To install the package, you may use [[https://github.com/radian-software/straight.el][straight.el]]. With straight.el, you need to put the following into your config:
 
 #+begin_src emacs-lisp
   (straight-use-package
@@ -20,12 +22,44 @@ The package is not available via ELPA / MELPA. To install the package, you need 
      :repo "nuthub/org-roam-citation-keyword-nodes"))
 #+end_src
 
-# #+begin_src emacs-lisp :tangle yes
-#   (use-package org-roam-citation-keyword-nodes
-#     :straight (org-roam-citation-keyword-nodes
-#   	     :type git :host github
-#   	     :repo "nuthub/org-roam-citation-keyword-nodes"))
-# #+end_src
+Or, if you use straight.el's version of use-package, you can use something like the following to install this package.
+
+#+begin_src emacs-lisp
+  (use-package org-roam-citation-keyword-nodes
+    :after roam citar
+    :straight (org-roam-citation-keyword-nodes
+  	     :type git :host github
+  	     :repo "nuthub/org-roam-citation-keyword-nodes"))
+#+end_src
+
+** Configuration
+
+This is an example, of how you can configure this package. The examples set the default values, which is not necessary, since the values are already set by default.
+
+#+begin_src emacs-lisp
+  (use-package org-roam-citation-keyword-nodes
+    :after roam citar
+    :straight (org-roam-citation-keyword-nodes
+  	     :type git :host github
+  	     :repo "nuthub/org-roam-citation-keyword-nodes")
+    :config
+    ;; The key (as in key/value) of the bibtex field that contains keywords.
+    (setq jf/org-roam-references-keyword-field "keywords")
+    ;; The character, the bibtex keyword entries are separated by.
+    (setq jf/org-roam-references-keyword-separator ",")
+    ;; The key (as in keyboard) of the template to use for new org-roam nodes.
+    (setq jf/org-roam-references-capture-template-key "d")
+    ;; A fallback template that is used, if the capture template key is nil.
+    (setq jf/org-roam-references-capture-fallback-template
+     	("d" "default" plain "%?"
+  	 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+  			    "#+title: ${title}\n")
+  	 :unnarrowed t))
+    ;; The org heading that should contain the references added to a keyword node.
+    (setq jf/org-roam-references-heading "References")
+    ;; The tags/property/todo match expression for searching the reference heading.
+    (setq jf/org-roam-references-heading-filter "LEVEL=1"))    
+#+end_src
 
 ** Usage
 
@@ -45,6 +79,6 @@ The colored dots are org-roam nodes, the grey dots are citations. To create an o
 
 ** Known issues
 - ROAM_REFS property is not added to the nodes. This is used by [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] to quickly find all nodes that relate to a citation. To add this functionality, is a one-liner, but I am not sure, if this is what I really want. This could of course be configurable.
-- These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable.
+- These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable (suggestions welcome).
 - ERT test cases are missing.
 - Incompatibility with frames-only-mode.
