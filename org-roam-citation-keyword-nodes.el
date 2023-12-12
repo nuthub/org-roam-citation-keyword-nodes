@@ -75,7 +75,9 @@ the heading, the references should be added to.")
 
 (defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
   "Retrieves the node that has S as title or alias.
-If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise."
+If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise.
+
+This is an adoption of org-roam-node-from-title-or-alias.  PR pending."
   ;; Search for nodes in the roam db that have the provided S as title or alias.
   ;; There should be only one such node.
   (let ((matches
