@@ -193,4 +193,6 @@ If the optional FORCE is t, nodes are created without asking the user."
    (citar-get-entries))
   )
 
+(provide 'org-roam-citation-keyword-nodes)
+
 ;;; org-roam-citation-keyword-nodes.el ends here

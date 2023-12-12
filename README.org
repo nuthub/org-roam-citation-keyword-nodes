@@ -11,7 +11,9 @@ For each keyword in the bibliography, an org-roam node is created if it does not
 
 ** Installation
 
-The package is not available via ELPA / MELPA. To install the package, you may use [[https://github.com/radian-software/straight.el][straight.el]]. With straight.el, you need to put the following into your config:
+The package is not available via ELPA / MELPA.
+
+To install the package, you may use [[https://github.com/radian-software/straight.el][straight.el]]. With straight.el, you need to put the following into your config:
 
 #+begin_src emacs-lisp
   (straight-use-package
@@ -20,12 +22,14 @@ The package is not available via ELPA / MELPA. To install the package, you may u
      :repo "nuthub/org-roam-citation-keyword-nodes"))
 #+end_src
 
-# #+begin_src emacs-lisp :tangle yes
-#   (use-package org-roam-citation-keyword-nodes
-#     :straight (org-roam-citation-keyword-nodes
-#   	     :type git :host github
-#   	     :repo "nuthub/org-roam-citation-keyword-nodes"))
-# #+end_src
+If you use straight.el's version of use-package, you can use:
+
+#+begin_src emacs-lisp
+  (use-package org-roam-citation-keyword-nodes
+    :straight (org-roam-citation-keyword-nodes
+  	     :type git :host github
+  	     :repo "nuthub/org-roam-citation-keyword-nodes"))
+#+end_src
 
 ** Usage
 
