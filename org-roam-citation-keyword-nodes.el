@@ -78,32 +78,6 @@ tags/property/todo match expression is allowed here.")
 
 ;; Functions
 
-(defun jf/org-roam-references--get-node-from-title-or-alias (s &optional nocase)
-  "Retrieves the node that has S as title or alias.
-If NOCASE is t, the query is case insensitive.  It is case sensitive otherwise.
-
-This is an adoption of org-roam-node-from-title-or-alias.  PR pending."
-  ;; Search for nodes in the roam db that have the provided S as title or alias.
-  ;; There should be only one such node.
-  (let ((matches
-	 (seq-uniq
-	  (append
-	   (org-roam-db-query (vconcat [:select [id] :from nodes
-						:where (= title $s1)]
-				       (if nocase [ :collate NOCASE ]))
-			      s)
-	   (org-roam-db-query (vconcat [:select [node-id] :from aliases
-						:where (= alias $s1)]
-				       (if nocase [ :collate NOCASE ]))
-			      s)))))
-    (cond
-     ((seq-empty-p matches)
-      nil)
-     ((= 1 (length matches))
-      (org-roam-populate (org-roam-node-create :id (caar matches))))
-     (t
-      (user-error "Multiple nodes exist with title or alias \"%s\"" s)))))
-
 (defun jf/org-roam-references--add-reference-to-roam-node-if-not-exists (node citekey)
   "Add to the org-roam node NODE a reference to CITEKEY."
   (let ((citation (citar-get-entry citekey)))
@@ -157,7 +131,7 @@ If no keywords were found, return the empty string."
 The user is asked for each new node, unless FORCE is t."
   (save-excursion
     (or
-     (jf/org-roam-references--get-node-from-title-or-alias title t)
+     (org-roam-node-from-title-or-alias title t)
      (progn
        (let* ((templatekey jf/org-roam-references-capture-template-key))
 	 (when (or force
@@ -171,7 +145,7 @@ The user is asked for each new node, unless FORCE is t."
 		    (list
 		     :templates
 		     (list jf/org-roam-references-capture-fallback-template))))))
-       (jf/org-roam-references--get-node-from-title-or-alias title t)))))
+       (org-roam-node-from-title-or-alias title t)))))
 
 ;;
 ;; The command to start the synchronization.
