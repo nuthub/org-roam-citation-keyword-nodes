@@ -1,8 +1,12 @@
 * org-roam-citation-keyword-nodes.el
 
-This package synchronizes keywords found in a bibliography (a bibtex file) with [[https://www.orgroam.com/][org-roam]] nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
+This package synchronizes keywords found in a bibliography (a bibtex file, via [[https://github.com/emacs-citar/citar][citar]]) with [[https://www.orgroam.com/][org-roam]] nodes (the term /node/ is org-roam jargon for a note, a zettel, a single file in the org-roam database).
 
-For each keyword in the bibliography, an org-roam node is created if it does not already exist. In this node a heading is created that contains references to the entries in the bibliography that has the corresponding keyword assigned. If the node already contains a reference, the reference will not be added again to the dedicated references heading.
+For each keyword in the bibliography, an org-roam node is created if it does not already exist. In this node a heading is created that contains references to the entries in the bibliography that has the corresponding keyword assigned. If the node already contains a reference (somewhere), the reference will not be added again to the dedicated references heading. The bibliography is never modified.
+
+The quality and usefulness of the result depend on (the quality of the keywords of) your literature database and your org-roam nodes, of course. It is a good idea to review the keywords (or groups, if you used groups in JabRef or similar) before migrating the nodes and references to your existing org-roam database.
+
+This package is more or less the result of my migration from JabRef to citar / org-roam.
 
 ** Requirements
 
@@ -57,28 +61,54 @@ This is an example, of how you can configure this package. The examples set the 
   	 :unnarrowed t))
     ;; The org heading that should contain the references added to a keyword node.
     (setq jf/org-roam-references-heading "References")
-    ;; The tags/property/todo match expression for searching the reference heading.
-    (setq jf/org-roam-references-heading-filter "LEVEL=1"))    
+    ;; The function used to ask the user for confirmation.
+    (setq jf/confirmation-function 'y-or-n-p))
 #+end_src
 
 ** Usage
 
-1. Make a backup of your org-roam database.
-2. Optional: Change your ~org-roam-directory~ for an initial synchronization to an empty directory to preview your results.
-3. Optional: Make sure, your org-roam-db is in sync with your file system. Run ~M-x org-roam-db-sync~ to be sure.
-4. Run ~M-x jf/org-roam-references-sync-keywords-to-roam-db~.
-5. Cross your fingers and wait (took 4 minutes with about 500 citations and 150 distinct keywords).
-6. Inspect the results (preferably with [[https://github.com/org-roam/org-roam-ui][org-roam-ui]]) and discover relationships in your literature database that you weren't aware of.
+Hints:
 
-The quality and usefulness of the result depend on the quality of your literature database, of course. It is a good idea to review the keywords (or groups, if you used groups in JabRef or similar) before migrating the nodes and references to your existing org-roam database.
+- Make a backup of your org-roam database or set ~org-roam-directory~ to some sandbox directory
+- Make sure, your org-roam-db is in sync with your file system. Run ~M-x org-roam-db-sync~ to be sure
+- Inspect the results with [[https://github.com/org-roam/org-roam-ui][org-roam-ui]] and discover relationships in your literature database that you weren't aware of
 
-The result may look similar to this one (in ~org-roam-ui~):
-[[./images/screenshot-2023-12-11.png]]
+*** Add to the references heading all bibrefs that have a related keyword, but don't occur anywhere else in the node
 
-The colored dots are org-roam nodes, the grey dots are citations. To create an org-roam node dedicated to a citation to capture additional information on that citation, the package [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] is what you want.
+- This use case operates on an org-roam node, since it cares for the title, possible aliases and the (configurable) references heading
+- Command: ~M-x jf/org-roam-references-add-related-references~
+
+*** Remove unresolvable citations from buffer
+
+- This use case is useful in all org buffers
+- Command: ~M-x jf/org-roam-references-delete-unresolvable-citations-in-buffer~
+
+*** Remove all bibrefs from references heading, that don't have a related keyword
+
+- This use case operates on an org-roam node, since it cares for the title, possible aliases and the (configurable) references heading
+- Command: ~M-x jf/org-roam-references-remove-unrelated-references~
+
+*** Add all bibrefs to all org-roam nodes' reference headings that relate to the bibref's keywords
+
+- This use case operates on the whole bibliography and org-roam-db
+- Command: ~M-x jf/org-roam-references-add-keywords-to-roam-db~
+
+*** Remove from all nodes' reference headings those bibrefs that don't have a related keyword
+
+- This use case operates on the whole bibliography and org-roam-db
+- Command: ~M-x jf/org-roam-references-remove-citations-from-roam-db~
+
+*** Remove references from an org-roam node that doesn't exist in bibliography
+
+~M-x jf/org-roam-references-delete-unresolvable-citations-in-buffer~
+
+*** Remove references from References heading that don't have a corresponding keyword
+
+~M-x jf/org-roam-references-remove-citations-without-related-keyword-in-buffer~
 
 ** Known issues
 - ROAM_REFS property is not added to the nodes. This is used by [[https://github.com/emacs-citar/citar-org-roam][citar-org-roam]] to quickly find all nodes that relate to a citation. To add this functionality, is a one-liner, but I am not sure, if this is what I really want. This could of course be configurable.
 - These are one of my first Emacs Lisp steps (except for configuration things). So code quality may be improvable (suggestions welcome).
 - ERT test cases are missing.
 - Incompatibility with frames-only-mode.
+
