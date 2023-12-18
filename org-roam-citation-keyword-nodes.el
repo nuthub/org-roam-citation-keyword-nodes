@@ -214,11 +214,13 @@ The comparison is case insensitive."
   "Move point to a matching CITEKEY in org cite links."
   (let ((regexp (concat "\\[cite:.*@" citekey ".*]"))
 	(found nil)
+	(beg 0)
 	(save-point (point)))
     (while (and (not found)
-		(re-search-forward regexp nil t))
+		(re-search-forward regexp nil t)
+		(setq beg (match-beginning 0)))
       (while (and (not (string-equal citekey (citar-key-at-point)))
-      		  (search-backward citekey  (match-beginning 0) t)))
+      		  (search-backward citekey beg t)))
       (setq found (string-equal citekey (citar-key-at-point))))
     ;; move cursor to good position and return meaningful value
     (cond
