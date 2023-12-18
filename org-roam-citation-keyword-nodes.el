@@ -155,20 +155,21 @@ The references heading is defined in jf/org-roam-references-heading."
   (save-excursion
     (goto-char (point-min))
     ;; check, if reference is already contained
-    (when (not (jf/org-roam-references--search-forward-regexp-citekey citekey))
+    (when (not (jf/org-roam-references--search-forward-citekey citekey))
       ;; make sure that the References heading exists
       (jf/org-roam-references--goto-references-heading-end node)
       ;; insert a newline, if we aren't on a blank line
       (goto-char (line-end-position))
       (ensure-empty-lines 1)
       (delete-blank-lines)
-      (let ((citation (citar-get-entry citekey)))
-	(insert (concat "- [cite:@" citekey "] "
-			(cdr (assoc "author" citation))
-			" :: "
-			(cdr (assoc "title" citation))
-			", " (cdr (assoc "year" citation))
-			"\n"))))))
+      (insert (format "- %s[cite:@%s] %s :: %s, %s\n"
+		      (if (funcall (citar-has-notes) citekey) "(n) " "")
+		      citekey
+		      (citar-get-value "author" citekey)
+		      (citar-get-value "title" citekey)
+		      (or (citar-get-value "year" citekey)
+			  (citar-get-value "date" citekey)))))))
+
 
 (defun jf/org-roam-references--get-keywords-of-citation (citation)
   "Return a list of strings with all keywords of the CITATION.
@@ -209,7 +210,7 @@ The comparison is case insensitive."
     	  keywords)
     all-refs))
 
-(defun jf/org-roam-references--search-forward-regexp-citekey (citekey)
+(defun jf/org-roam-references--search-forward-citekey (citekey)
   "Move point to a matching CITEKEY in org cite links."
   (let ((regexp (concat "\\[cite:.*@" citekey ".*]"))
 	(found nil)
@@ -241,7 +242,7 @@ User gets asked for confirmation, unless FORCE is non-nil."
 If FORCE is t, the citation reference is removed without asking the user."
   (goto-char (point-min))
   ;; search-forward-regexp moves point after citation
-  (while (jf/org-roam-references--search-forward-regexp-citekey citekey)
+  (while (jf/org-roam-references--search-forward-citekey citekey)
     ;; if a citation contains a reference multiple times,
     ;; only the last occurence is considered for removal
     (jf/org-roam-references--ask-for-citation-removal force)))
