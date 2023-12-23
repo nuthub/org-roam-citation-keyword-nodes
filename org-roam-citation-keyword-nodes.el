@@ -266,6 +266,7 @@ If FORCE is t, the citation reference is removed without asking the user."
 ;; interactive commands
 ;;
 
+;;;###autoload
 (defun jf/org-roam-references-remove-unresolvable-citations (&optional force)
   "Remove all citation references, that are not found in bibliography.
 If FORCE is t, the citation reference is removed without asking the user."
@@ -287,6 +288,7 @@ Return t, if there were no errors."
       (dolist (citekey (jf/org-roam-references--get-citekeys-by-keyword keyword))
 	(jf/org-roam-references--add-reference-to-roam-node node citekey)))))
 
+;;;###autoload
 (defun jf/org-roam-references-remove-unrelated-references (&optional force node)
   "Remove all unrelated references from NODE's references heading.
 Acts on (org-roam-node-at-point), unless NODE is non-nil.
@@ -316,6 +318,7 @@ Return t, if there were no errors."
      "LEVEL=1"))t)
 
 
+;;;###autoload
 (defun jf/org-roam-references-remove-citations-from-roam-db (&optional force)
   "Synchronize the citations' keywords with org-roam nodes.
 Only the direction bibliography -> org-roam is supported.
