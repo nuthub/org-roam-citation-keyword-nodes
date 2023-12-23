@@ -74,7 +74,7 @@ The heading needs to be at level 1 and will be created as level 1 heading,
 if it does not exist.")
 
 ;;;###autoload
-(defvar jf/confirmation-function 'y-or-n-p
+(defvar jf/org-roam-references-confirmation-function 'y-or-n-p
   "The function used to ask the user for confirmation.
 This is used when references are about to be removed or new nodes are about
 to be created.")
@@ -91,7 +91,7 @@ Parts of the code are from citar-org-roam."
      (progn
        (let ((templatekey jf/org-roam-references-capture-template-key))
 	 (when (or force
-		   (funcall jf/confirmation-function (concat "Create a org-roam node \"" title "\"?")))
+		   (funcall jf/org-roam-references-confirmation-function (concat "Create a org-roam node \"" title "\"?")))
 	   (apply 'org-roam-capture-
 		  :info (list :title title)
 		  :node (org-roam-node-create :title title)
@@ -239,7 +239,7 @@ The comparison is case insensitive."
   "Delete from text the citation key at point.
 User gets asked for confirmation, unless FORCE is non-nil."
   (when (or force
-	    (funcall jf/confirmation-function
+	    (funcall jf/org-roam-references-confirmation-function
 		     (concat "Remove \"@"
 			     (citar-key-at-point)
 			     "\" (from) citation? ")))
