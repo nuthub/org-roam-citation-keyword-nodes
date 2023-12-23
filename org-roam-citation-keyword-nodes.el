@@ -277,6 +277,7 @@ If FORCE is t, the citation reference is removed without asking the user."
       (when (not (gethash citekey all-citations))
 	(jf/org-roam-references--remove-citation citekey force)))))
 
+;;;###autoload
 (defun jf/org-roam-references-add-related-references (&optional node)
   "Add the related references to org-roam NODE.
 Acts on (org-roam-node-at-point), unless NODE is non-nil.
