@@ -37,6 +37,7 @@
 (require 'citar-org)
 
 ;; Variables
+;;;###autoload
 (defvar jf/org-roam-references-keyword-field "keywords"
   "The key (as in key/value) of the bibtex field that contains keywords.
 Is \"keywords\" in the typical use case, but may also be e.g. \"groups\"
@@ -44,18 +45,21 @@ if you want to create roam nodes for JabRef groups.
 Set jf/org-roam-references-keyword-field to the delimiter, the different
 keywords are separated by.  The keywords are trimmed after separation.")
 
+;;;###autoload
 (defvar jf/org-roam-references-keyword-separator ","
   "The character, the bibtex keyword entries are separated by.
 The delimiter of the entries in the keyword field.  This is the string
 separating the values in the jf/org-roam-references-keyword-field of bibtex
 entries.  An alternative could be \";\".")
 
+;;;###autoload
 (defvar jf/org-roam-references-capture-template-key "d"
   "The key (as in keyboard) of the template to use for new org-roam nodes.
 The template key of the templates in in org-roam-capture-templates to use for
 creating new nodes.  If the value is nil, the (first) template in
 jf/org-roam-references-capture-fallback-template is used.")
 
+;;;###autoload
 (defvar jf/org-roam-references-capture-fallback-template
   '("d" "default" plain "%?"
     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
@@ -63,11 +67,13 @@ jf/org-roam-references-capture-fallback-template is used.")
   "A fallback template that is used, if the capture template key is nil.
 The capture template key is set in jf/org-roam-references-capture-template-key.")
 
+;;;###autoload
 (defvar jf/org-roam-references-heading "References"
   "The org heading that should contain the references added to a keyword node.
 The heading needs to be at level 1 and will be created as level 1 heading,
 if it does not exist.")
 
+;;;###autoload
 (defvar jf/confirmation-function 'y-or-n-p
   "The function used to ask the user for confirmation.
 This is used when references are about to be removed or new nodes are about
